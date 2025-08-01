@@ -197,73 +197,7 @@ fun AddProductBody(
                     .padding(20.dp),
                 verticalArrangement = Arrangement.spacedBy(24.dp)
             ) {
-                item {
-                    // 🎮 Epic Gaming Header Card
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .shadow(
-                                elevation = 16.dp,
-                                shape = RoundedCornerShape(24.dp),
-                                ambientColor = neonBlue.copy(alpha = 0.4f)
-                            )
-                            .border(
-                                2.dp,
-                                brush = Brush.horizontalGradient(
-                                    colors = listOf(
-                                        neonBlue.copy(alpha = glowAlpha),
-                                        neonGreen.copy(alpha = glowAlpha),
-                                        neonOrange.copy(alpha = glowAlpha)
-                                    )
-                                ),
-                                shape = RoundedCornerShape(24.dp)
-                            ),
-                        colors = CardDefaults.cardColors(containerColor = cardColor),
-                        shape = RoundedCornerShape(24.dp)
-                    ) {
-                        Column(
-                            modifier = Modifier.padding(24.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            // Rotating Gaming Icon
-                            Box(
-                                modifier = Modifier
-                                    .size(100.dp)
-                                    .background(
-                                        brush = Brush.radialGradient(
-                                            colors = listOf(
-                                                neonBlue.copy(alpha = 0.3f),
-                                                Color.Transparent
-                                            )
-                                        ),
-                                        CircleShape
-                                    ),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Box(
-                                    modifier = Modifier
-                                        .size(80.dp)
-                                        .rotate(rotation)
-                                        .border(
-                                            3.dp,
-                                            brush = Brush.sweepGradient(
-                                                colors = listOf(
-                                                    neonBlue,
-                                                    neonGreen,
-                                                    neonOrange,
-                                                    neonBlue
-                                                )
-                                            ),
-                                            CircleShape
-                                        )
-                                )
-
-                                Text(
-                                    text = "🎮",
-                                    fontSize = 40.sp,
-                                    modifier = Modifier.align(Alignment.Center)
-                                )
-                            }
+               g
 
                             Spacer(modifier = Modifier.height(16.dp))
 
