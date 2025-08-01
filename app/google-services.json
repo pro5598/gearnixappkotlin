@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "516744529986",
+    "firebase_url": "https://gearnix-c89c7-default-rtdb.firebaseio.com",
+    "project_id": "gearnix-c89c7",
+    "storage_bucket": "gearnix-c89c7.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:516744529986:android:972d55247a6f2ef31885db",
+        "android_client_info": {
+          "package_name": "com.example.gearnix"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_e71JyzmfTeUPvCvQHJ_vmwpvJoK-K9g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
