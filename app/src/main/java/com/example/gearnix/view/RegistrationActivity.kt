@@ -90,6 +90,25 @@ class RegistrationActivity : ComponentActivity() {
 }
 
 @Composable
+fun RegistrationBody() {
+    val repo = remember { UserRepositoryImpl() }
+    val userViewModel = remember { UserViewModel(repo) }
+
+    var fullName by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var confirmPassword by remember { mutableStateOf("") }
+    var passwordVisibility by remember { mutableStateOf(false) }
+    var confirmPasswordVisibility by remember { mutableStateOf(false) }
+    var phoneNumber by remember { mutableStateOf("") }
+    var address by remember { mutableStateOf("") }
+    var agreeToTerms by remember { mutableStateOf(false) }
+
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val activity = context as? Activity
+    val scrollState = rememberScrollState()
 
     // Gaming color scheme - Dark with neon accents
     val backgroundColor = Color(0xFF0D1117)
