@@ -87,7 +87,270 @@ class DeleteProductActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-sp
+fun DeleteProductBody() {
+    val context = LocalContext.current
+    val activity = context as Activity
+
+    // ViewModel setup
+    val repository = remember { ProductRepositoryImpl() }
+    val productViewModel = remember { ProductViewModel(repository) }
+
+    var searchQuery by remember { mutableStateOf("") }
+    var showDeleteDialog by remember { mutableStateOf(false) }
+    var selectedProduct by remember { mutableStateOf<ProductModel?>(null) }
+    var isDeleting by remember { mutableStateOf(false) }
+
+    // 🔥 UPDATED: Observe products with better state management
+    val allProducts by productViewModel.allProducts.observeAsState(emptyList())
+    val isLoading by productViewModel.loading.observeAsState(false)
+
+    // 🔥 IMPROVED: Load products when activity starts
+    LaunchedEffect(Unit) {
+        Log.d("DeleteProductActivity", "Component launched, loading products...")
+        productViewModel.getAllProduct()
+    }
+
+    // Filter products based on search
+    val validProducts = allProducts.filterNotNull()
+    val filteredProducts = if (searchQuery.isEmpty()) {
+        validProducts
+    } else {
+        validProducts.filter {
+            it.productName.contains(searchQuery, ignoreCase = true) ||
+                    it.description.contains(searchQuery, ignoreCase = true)
+        }
+    }
+
+    // Gaming color scheme
+    val backgroundColor = Color(0xFF0D1117)
+    val cardColor = Color(0xFF161B22)
+    val neonBlue = Color(0xFF00D9FF)
+    val neonPurple = Color(0xFF8B5FBF)
+    val neonGreen = Color(0xFF39FF14)
+    val dangerRed = Color(0xFFFF6B6B)
+    val textColor = Color.White
+    val placeholderColor = Color(0xFF8B949E)
+    val fieldBorderColor = Color(0xFF30363D)
+
+    val gradientColors = listOf(
+        Color(0xFF0D1117),
+        Color(0xFF161B22),
+        Color(0xFF21262D)
+    )
+
+    // Debug logging
+    Log.d("DeleteProductActivity", "Render - isLoading: $isLoading, validProducts.size: ${validProducts.size}")
+
+    Scaffold(
+        containerColor = backgroundColor,
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        "DELETE GAMING GEAR",
+                        fontWeight = FontWeight.Black,
+                        color = Color.White,
+                        letterSpacing = 2.sp
+                    )
+                },
+                navigationIcon = {
+                    IconButton(
+                        onClick = {
+                            val intent = Intent(context, DashboardActivity::class.java)
+                            context.startActivity(intent)
+                            activity.finish()
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Back",
+                            tint = neonBlue,
+                            modifier = Modifier.size(28.dp)
+                        )
+                    }
+                },
+                actions = {
+                    // 🔥 ADDED: Refresh button
+                    IconButton(
+                        onClick = {
+                            Log.d("DeleteProductActivity", "Refresh button clicked")
+                            productViewModel.refreshProducts()
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Refresh,
+                            contentDescription = "Refresh",
+                            tint = neonGreen,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = cardColor
+                )
+            )
+        }
+    ) { padding ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    brush = Brush.radialGradient(
+                        colors = gradientColors,
+                        radius = 1200f
+                    )
+                )
+        ) {
+            // Background gaming elements
+            Box(
+                modifier = Modifier
+                    .size(200.dp)
+                    .background(
+                        brush = Brush.radialGradient(
+                            colors = listOf(
+                                dangerRed.copy(alpha = 0.1f),
+                                Color.Transparent
+                            ),
+                            radius = 300f
+                        ),
+                        CircleShape
+                    )
+                    .align(Alignment.TopEnd)
+            )
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .padding(24.dp)
+            ) {
+                // Header
+                Text(
+                    text = "REMOVE FROM INVENTORY",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = neonGreen,
+                    letterSpacing = 1.sp,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
+
+                // Warning Card
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .shadow(
+                            elevation = 8.dp,
+                            shape = RoundedCornerShape(12.dp),
+                            ambientColor = dangerRed.copy(alpha = 0.3f)
+                        ),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = CardDefaults.cardColors(containerColor = dangerRed.copy(alpha = 0.1f))
+                ) {
+                    Row(
+                        modifier = Modifier.padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Warning,
+                            contentDescription = null,
+                            tint = dangerRed,
+                            modifier = Modifier.size(24.dp)
+                        )
+
+                        Text(
+                            text = "⚠️ DANGER ZONE: Deleted products cannot be recovered!",
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = dangerRed,
+                            modifier = Modifier.padding(start = 12.dp)
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                // Search Field
+                OutlinedTextField(
+                    value = searchQuery,
+                    onValueChange = { searchQuery = it },
+                    placeholder = {
+                        Text("Search products to delete...", color = placeholderColor)
+                    },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.Search,
+                            contentDescription = null,
+                            tint = neonGreen
+                        )
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = neonBlue,
+                        unfocusedBorderColor = fieldBorderColor,
+                        focusedTextColor = textColor,
+                        unfocusedTextColor = textColor,
+                        cursorColor = neonBlue,
+                        focusedContainerColor = Color(0xFF0D1117),
+                        unfocusedContainerColor = Color(0xFF0D1117)
+                    )
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                // 🔥 IMPROVED: Better state management for products display
+                when {
+                    isLoading -> {
+                        // Loading State
+                        Box(
+                            modifier = Modifier.fillMaxWidth(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                CircularProgressIndicator(
+                                    color = neonBlue,
+                                    strokeWidth = 3.dp,
+                                    modifier = Modifier.size(48.dp)
+                                )
+                                Spacer(modifier = Modifier.height(16.dp))
+                                Text(
+                                    text = "LOADING PRODUCTS TO DELETE...",
+                                    color = neonBlue,
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    letterSpacing = 1.sp
+                                )
+                                Text(
+                                    text = "Preparing danger zone",
+                                    color = placeholderColor,
+                                    fontSize = 12.sp
+                                )
+                            }
+                        }
+                    }
+
+                    filteredProducts.isEmpty() -> {
+                        // Empty State
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 32.dp),
+                            shape = RoundedCornerShape(16.dp),
+                            colors = CardDefaults.cardColors(containerColor = cardColor)
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(32.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    text = when {
+                                        validProducts.isEmpty() -> "🎮"
+                                        searchQuery.isNotEmpty() -> "🔍"
+                                        else -> "🎉"
+                                    },
+                                    fontSize = 48.sp
                                 )
                                 Text(
                                     text = when {
