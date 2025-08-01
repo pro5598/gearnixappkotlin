@@ -99,29 +99,7 @@ fun LoginBody(innerPaddingValues: PaddingValues) {
     val context = LocalContext.current
     val activity = context as Activity
 
-    var username by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var passwordVisibility by remember { mutableStateOf(false) }
-    var rememberMe by remember { mutableStateOf(false) }
 
-    val coroutineScope = rememberCoroutineScope()
-    val snackbarHostState = remember { SnackbarHostState() }
-
-    // SharedPreferences for Remember Me functionality
-    val sharedPreferences = context.getSharedPreferences("User", Context.MODE_PRIVATE)
-    val editor = sharedPreferences.edit()
-
-    // Load saved credentials if available
-    LaunchedEffect(Unit) {
-        val localEmail: String = sharedPreferences.getString("email", "") ?: ""
-        val localPassword: String = sharedPreferences.getString("password", "") ?: ""
-
-        if (localEmail.isNotEmpty()) {
-            username = localEmail
-            password = localPassword
-            rememberMe = true
-        }
-    }
 
     // Gaming color scheme - Dark with neon accents
     val backgroundColor = Color(0xFF0D1117)
