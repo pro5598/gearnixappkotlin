@@ -15,30 +15,9 @@ class ProductViewModel(val repo: ProductRepository) : ViewModel() {
         repo.uploadImage(context, imageUri, callback)
     }
 
-    fun addProduct(model: ProductModel, callback: (Boolean, String) -> Unit) {
-        repo.addProduct(model, callback)
-    }
 
-    fun deleteProduct(productID: String, callback: (Boolean, String) -> Unit) {
-        repo.deleteProduct(productID, callback)
-    }
 
-    fun updateProduct(productID: String, productData: MutableMap<String, Any?>, callback: (Boolean, String) -> Unit) {
-        repo.updateProduct(productID, productData, callback)
-    }
 
-    private val _products = MutableLiveData<ProductModel?>()
-    val products: LiveData<ProductModel?> get() = _products
-
-    fun getProductByID(productID: String) {
-        repo.getProductByID(productID) { data, success, message ->
-            if (success) {
-                _products.postValue(data)
-            } else {
-                _products.postValue(null)
-            }
-        }
-    }
 
     private val _allProducts = MutableLiveData<List<ProductModel?>>()
     val allProducts: LiveData<List<ProductModel?>> get() = _allProducts
